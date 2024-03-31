@@ -1,36 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { Button, View, Text, FlatList } from 'react-native';
+import { Button, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import Constants from 'expo-constants';
+import { styles } from '../styles/styles';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const HomeScreen = ({ navigation })  => {
   const [groups, setGroups] = useState([]);
 
   const uniqueId =  Constants.sessionId || Constants.deviceId;
-console.log(uniqueId);
+  console.log(uniqueId);
+  const handleCreateGroup = () => {
+    navigation.navigate('CreateGroup');
+  };
+
+
   useEffect(() => {
-    // Replace 'http://my-api.com/groups' with your API endpoint
-    axios.get(`http://192.168.10.133:8080/groups/${uniqueId}`)
-      .then(response => {
-        console.log(response.data);
+    const fetchGroups = async () => {
+      try {
+        const response = await axios.get(`http://192.168.10.133:8080/groups/${uniqueId}`);
         setGroups(response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }, []);
- 
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      }
+    };
+
+    const unsubscribeFocus = navigation.addListener('focus', fetchGroups);
+
+    // Cleanup function
+    return unsubscribeFocus;
+  }, [navigation, uniqueId]);
   return (
-    <View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Groups</Text>
       <FlatList
-        data={groups}
-        renderItem={({ item }) => <Text>{item.groupName}</Text>}
-        keyExtractor={item => item.userId.toString()}
-      />{/* Your existing code... */}
-      <Button
-        title="Create Group"
-        onPress={() => navigation.navigate('CreateGroup')}
-      />
+      data={groups}
+      keyExtractor={() => uuidv4()} // Generate a unique key for each item
+      renderItem={({ item }) => (
+        <View style={styles.groupItem}>
+          <Button
+            title={item.groupName}
+            onPress={() => navigation.navigate('Group', { groupId: item.id })}
+            style={styles.groupButton}
+          />
+        </View>
+      )}
+    />
       <TouchableOpacity
         onPress={handleCreateGroup}
         style={styles.addButton}>
