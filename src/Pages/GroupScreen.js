@@ -1,6 +1,7 @@
 // GroupScreen.js
 import React, { useState } from 'react';
 import { View, Text, Button, TextInput, FlatList, Modal } from 'react-native';
+import { styles } from '../styles/styles';
 
 const GroupScreen = () => {
   const [expenses, setExpenses] = useState([]);
@@ -18,14 +19,18 @@ const GroupScreen = () => {
   };
 
   return (
-    <View>
-      <Text>Group Screen</Text>
-      <Button title="Add Expense" onPress={() => setModalVisible(true)} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Group Screen</Text>
+      <Button
+        title="Add Expense"
+        onPress={() => setModalVisible(true)}
+        style={styles.addButton}
+      />
       <FlatList
         data={expenses}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View>
+          <View style={styles.expenseItem}>
             <Text>{item.name}: ${item.amount}</Text>
           </View>
         )}
@@ -38,22 +43,26 @@ const GroupScreen = () => {
           setModalVisible(false);
         }}
       >
-        <View>
-          <View>
-            <Text>Add Expense</Text>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add Expense</Text>
             <TextInput
+              style={styles.input}
               placeholder="Expense Name"
               value={expenseName}
               onChangeText={text => setExpenseName(text)}
             />
             <TextInput
+              style={styles.input}
               placeholder="Expense Amount"
               value={expenseAmount}
               onChangeText={text => setExpenseAmount(text)}
               keyboardType="numeric"
             />
-            <Button title="Add" onPress={addExpense} />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} />
+            <View style={styles.buttonContainer}>
+              <Button title="Add" onPress={addExpense} />
+              <Button title="Cancel" onPress={() => setModalVisible(false)} />
+            </View>
           </View>
         </View>
       </Modal>

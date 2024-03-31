@@ -1,6 +1,7 @@
 // HomeScreen.js
 import React, { useState } from 'react';
 import { View, Text, Button, TextInput, FlatList, Modal } from 'react-native';
+import { styles } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
@@ -16,14 +17,14 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <Text>Home Screen</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Home Screen</Text>
       <Button title="Create Group" onPress={() => setModalVisible(true)} />
       <FlatList
         data={groups}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View>
+          <View style={styles.buttonContainer}>
             <Button
               title={item.name}
               onPress={() => navigation.navigate('Group')}
@@ -39,16 +40,19 @@ const HomeScreen = ({ navigation }) => {
           setModalVisible(false);
         }}
       >
-        <View>
-          <View>
-            <Text>Create Group</Text>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Create Group</Text>
             <TextInput
+              style={styles.input}
               placeholder="Group Name"
               value={groupName}
               onChangeText={text => setGroupName(text)}
             />
-            <Button title="Create" onPress={addGroup} />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} />
+            <View style={styles.buttonContainer}>
+              <Button title="Create" onPress={addGroup} />
+              <Button title="Cancel" onPress={() => setModalVisible(false)} />
+            </View>
           </View>
         </View>
       </Modal>
