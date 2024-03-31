@@ -28,7 +28,7 @@ const CreateGroupScreen = ({ navigation }) => {
     
       // Replace 'http://my-api.com/groups' with your API endpoint
       console.log(groupData)
-      axios.post('http://192.168.10.146:8080/groups', groupData).then((response) => {
+      axios.post('http://192.168.10.133:8080/groups', groupData).then((response) => {
         console.log(response);
         navigation.goBack();
       }).catch((error) => {
