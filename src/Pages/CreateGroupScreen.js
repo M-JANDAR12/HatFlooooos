@@ -1,36 +1,39 @@
 import React, { useState } from 'react';
 import { Button, Text, View, TextInput, FlatList } from 'react-native';
 import axios from 'axios';
-import DeviceInfo from 'react-native-device-info';
-
-const CreateGroupPage = ({ navigation }) => {
+import Constants from 'expo-constants';
+import * as Application from 'expo-application';
+// import getIvmsiAsync from 'expo-identifier-for-vendor';
+const CreateGroupScreen = ({ navigation }) => {
   const [groupName, setGroupName] = useState('');
   const [friendName, setFriendName] = useState('');
-  const [friends, setFriends] = useState([]);
+  const [OwnerName, setOwnerName] = useState('');
+  const [participants, setFriends] = useState([]);
 
   const addFriend = () => {
-    setFriends([...friends, friendName]);
+    setFriends([...participants, friendName]);
     setFriendName('');
   };
 
   const saveGroup = async () => {
-    const macAddress = await DeviceInfo.getMacAddress(); // Get MAC address
 
+    const uniqueId =  Constants.sessionId || Constants.deviceId;
     const groupData = {
-      groupName,
-      friends,
-      macAddress,
+      groupName: groupName,
+      participants: participants,
+      mainName: OwnerName,
+      userId: uniqueId,
     };
 
-    try {
+    
       // Replace 'http://my-api.com/groups' with your API endpoint
-      const response = await axios.post('http://my-api.com/groups', groupData);
-      console.log(response.data);
-      // Navigate back or to another screen after saving the group
-      navigation.goBack();
-    } catch (error) {
-      console.error(error);
-    }
+      console.log(groupData)
+      axios.post('http://192.168.10.146:8080/groups', groupData).then((response) => {
+        console.log(response);
+        navigation.goBack();
+      }).catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   const cancel = () => {
@@ -47,13 +50,17 @@ const CreateGroupPage = ({ navigation }) => {
         placeholder="Group Name"
       />
       <TextInput
+        value={OwnerName}
+        onChangeText={setOwnerName}
+        placeholder="Owner Name"
+      />
+      <TextInput
         value={friendName}
         onChangeText={setFriendName}
-        placeholder="Friend's Name"
-      />
+        placeholder='Friend Name'/>
       <Button title="Add Friend" onPress={addFriend} />
       <FlatList
-        data={friends}
+        data={participants}
         renderItem={({ item }) => <Text>{item}</Text>}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -63,4 +70,4 @@ const CreateGroupPage = ({ navigation }) => {
   );
 };
 
-export default CreateGroupPage; 
+export default CreateGroupScreen; 
