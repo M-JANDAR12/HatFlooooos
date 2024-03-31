@@ -62,3 +62,5 @@ const CreateGroupPage = ({ navigation }) => {
     </View>
   );
 };
+
+export default CreateGroupPage; 
