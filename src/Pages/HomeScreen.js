@@ -1,6 +1,7 @@
 // HomeScreen.js
 import React, { useState } from 'react';
-import { View, Text, Button, FlatList } from 'react-native';
+import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { styles } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]);
@@ -17,23 +18,27 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button title="Create Group" onPress={handleCreateGroup} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Groups</Text>
       <FlatList
         data={dummyGroups}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <View>
+          <View style={styles.groupItem}>
             <Button
               title={item.name}
               onPress={() => navigation.navigate('Group', { groupId: item.id })}
+              style={styles.groupButton}
             />
           </View>
         )}
       />
+      <TouchableOpacity
+        onPress={handleCreateGroup}
+        style={styles.addButton}>
+        <Text style={styles.addButtonLabel}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-export default HomeScreen;
+export default HomeScreen

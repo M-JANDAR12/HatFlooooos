@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Button, Text, View, TextInput, FlatList } from 'react-native';
 import axios from 'axios';
 import Constants from 'expo-constants';
-import * as Application from 'expo-application';
-// import getIvmsiAsync from 'expo-identifier-for-vendor';
+import { styles } from '../styles/styles'; // Importing styles from styles.js
+
 const CreateGroupScreen = ({ navigation }) => {
   const [groupName, setGroupName] = useState('');
   const [friendName, setFriendName] = useState('');
@@ -16,7 +16,6 @@ const CreateGroupScreen = ({ navigation }) => {
   };
 
   const saveGroup = async () => {
-
     const uniqueId =  Constants.sessionId || Constants.deviceId;
     const groupData = {
       groupName: groupName,
@@ -25,13 +24,14 @@ const CreateGroupScreen = ({ navigation }) => {
       userId: uniqueId,
     };
 
+    console.log(groupData);
     
-      // Replace 'http://my-api.com/groups' with your API endpoint
-      console.log(groupData)
-      axios.post('http://192.168.10.146:8080/groups', groupData).then((response) => {
+    axios.post('http://192.168.10.133:8080/groups', groupData)
+      .then((response) => {
         console.log(response);
         navigation.goBack();
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error('Error:', error);
       });
   };
@@ -43,31 +43,42 @@ const CreateGroupScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
+        style={styles.input}
         value={groupName}
         onChangeText={setGroupName}
         placeholder="Group Name"
       />
       <TextInput
+        style={styles.input}
         value={OwnerName}
         onChangeText={setOwnerName}
         placeholder="Owner Name"
       />
       <TextInput
+        style={styles.input}
         value={friendName}
         onChangeText={setFriendName}
-        placeholder='Friend Name'/>
-      <Button title="Add Friend" onPress={addFriend} />
+        placeholder='Friend Name'
+      />
+      <Button title="Add Friend" onPress={addFriend} style={styles.addButton} />
       <FlatList
         data={participants}
-        renderItem={({ item }) => <Text>{item}</Text>}
+        renderItem={({ item }) => (
+          <View style={styles.participantContainer}>
+            <Text style={styles.participantText}>{item}</Text>
+          </View>
+        )}
         keyExtractor={(item, index) => index.toString()}
       />
-      <Button title="Save" onPress={saveGroup} />
-      <Button title="Cancel" onPress={cancel} />
+
+      <View style={styles.buttonContainer}>
+        <Button title="Save" onPress={saveGroup} />
+        <Button title="Cancel" onPress={cancel} />
+      </View>
     </View>
   );
 };
 
-export default CreateGroupScreen; 
+export default CreateGroupScreen;
