@@ -80,5 +80,4 @@ const CreateGroupScreen = ({ navigation }) => {
     </View>
   );
 };
-
 export default CreateGroupScreen;
