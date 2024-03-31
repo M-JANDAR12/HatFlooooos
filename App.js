@@ -1,72 +1,41 @@
 // Import necessary libraries
 import React, { useState } from 'react';
 import { Button, Text, View, TextInput, FlatList } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+// Import your pages
+import GroupListPage from './src/Groups/List'; // Update with your file path
+// ... import other pages
 
 // CreateExpensePage equivalent in React Native
-const CreateExpensePage = () => {
-  const [amount, setAmount] = useState('');
-  const [selectedFriends, setSelectedFriends] = useState({});
-
-  const validate = () => {
-    // Add your validation logic here
-  };
-
-  const saveExpense = () => {
-    if (validate()) {
-      // Save the expense
-      console.log('Expense saved successfully!');
-    }
-  };
+const CreateExpensePage = ({ navigation }) => {
+  // ... existing code
 
   return (
     <View>
-      <TextInput
-        value={amount}
-        onChangeText={setAmount}
-        placeholder="Amount"
-        keyboardType="numeric"
-      />
+      {/* ... existing code */}
       <Button
-        title="Select Friends"
-        onPress={() => {
-          // Navigate to SelectFriendsPage and update selectedFriends
-        }}
+        title="Go to Groups"
+        onPress={() => navigation.navigate('Groups')}
       />
-      <FlatList
-        data={Object.entries(selectedFriends)}
-        keyExtractor={(item) => item[0]}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item[0]}: {item[1]}</Text>
-          </View>
-        )}
-      />
-      <Button title="Save" onPress={saveExpense} />
     </View>
   );
 };
 
-// SelectFriendsPage equivalent in React Native
-const SelectFriendsPage = ({ navigation }) => {
-  const [friends, setFriends] = useState(['Friend 1', 'Friend 2', 'Friend 3']);
-  const [selectedFriends, setSelectedFriends] = useState({});
+// Create a stack navigator
+const Stack = createStackNavigator();
 
+const App = () => {
   return (
-    <FlatList
-      data={friends}
-      keyExtractor={(item) => item}
-      renderItem={({ item }) => (
-        <View>
-          <Text>{item}</Text>
-          <TextInput
-            onChangeText={(value) => setSelectedFriends({ ...selectedFriends, [item]: value })}
-            placeholder="Amount"
-            keyboardType="numeric"
-          />
-        </View>
-      )}
-    />
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="CreateExpense">
+        <Stack.Screen name="CreateExpense" component={CreateExpensePage} />
+        <Stack.Screen name="Groups" component={GroupListPage} />
+        {/* Add more screens as needed */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-export default CreateExpensePage;
+export default App;
